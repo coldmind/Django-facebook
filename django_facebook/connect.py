@@ -4,6 +4,7 @@ from django.core.files.temp import NamedTemporaryFile
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import transaction
 from django.db.utils import IntegrityError
+from django.utils import timezone
 import json
 from django_facebook import exceptions as facebook_exceptions, \
     settings as facebook_settings, signals
@@ -101,7 +102,13 @@ def connect_user(request, access_token=None, facebook_graph=None, connect_facebo
 
     _update_access_token(user, graph)
 
-    logger.info('connect finished with action %s', action)
+    ctx = {
+        'action': action,
+        'user_id': user.id,
+        'time': timezone.now(),
+    }
+    logger.info("connect finished with action %(action)s for user %(user_id)d "
+                "at %(time)s" % ctx)
 
     return action, user
 
