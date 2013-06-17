@@ -42,6 +42,9 @@ def get_profile_model():
     return model
 
 
+get_profile_class = get_profile_model
+
+
 def get_user_model():
     '''
     For Django < 1.5 backward compatibility
