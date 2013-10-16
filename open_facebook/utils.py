@@ -119,8 +119,8 @@ def send_warning(message, request=None, e=None, **extra_data):
     data.update(extra_data)
     logger.warn(message,
                 exc_info=sys.exc_info(), extra={
-                'request': request,
-                'data': data
+                    'request': request,
+                    'data': data
                 })
 
 
@@ -189,6 +189,7 @@ class memoized(object):
     If called later with the same arguments, the cached value is returned
     (not reevaluated).
     '''
+
     def __init__(self, func):
         self.func = func
         self.cache = {}

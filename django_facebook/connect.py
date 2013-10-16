@@ -95,6 +95,9 @@ def connect_user(request, access_token=None, facebook_graph=None, connect_facebo
                     'parallel register encountered, slower thread is doing a login')
                 auth_user = authenticate(
                     facebook_id=facebook_data['id'], **kwargs)
+                if not auth_user:
+                    # We don't have a valid user so raise
+                    raise e
                 action = CONNECT_ACTIONS.LOGIN
                 user = _login_user(request, converter, auth_user, update=False)
 
@@ -159,10 +162,10 @@ def _update_likes_and_friends(request, user, facebook):
         logger.warn(u'Integrity error encountered during registration, '
                     'probably a double submission %s' % e,
                     exc_info=sys.exc_info(), extra={
-                    'request': request,
-                    'data': {
-                        'body': unicode(e),
-                    }
+                        'request': request,
+                        'data': {
+                            'body': unicode(e),
+                        }
                     })
         transaction.savepoint_rollback(sid)
 
