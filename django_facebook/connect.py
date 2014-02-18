@@ -228,6 +228,17 @@ def _register_user(request, facebook, profile_callback=None,
         data['email'] = data['email'].replace(
             '@', '+test%s@' % randint(0, 1000000000))
 
+    if 'api' in request.path:
+        from django import forms
+        attrs_dict = {}
+        email = data.get('email', None)
+        if not email:
+            data['email'] = None
+        form_class.base_fields['email'] = forms.EmailField(widget=forms.TextInput(attrs=dict(attrs_dict,
+                                                                                  maxlength=75)),
+                                                           label="Email address",
+                                                           required=False)
+
     form = form_class(data=data, files=request.FILES,
                       initial={'ip': request.META['REMOTE_ADDR']})
 
